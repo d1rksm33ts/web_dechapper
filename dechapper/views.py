@@ -6,7 +6,7 @@ from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_POST, require_safe
 
 from .forms import ContactForm
 from .models import SiteConfiguration
@@ -33,7 +33,7 @@ def availability():
     }
 
 
-@require_GET
+@require_safe
 def home(request):
     return render(request, "dechapper/index.html", {
         "availability": availability(),
@@ -44,7 +44,7 @@ def home(request):
     })
 
 
-@require_GET
+@require_safe
 def privacy(request):
     return render(request, "dechapper/privacy.html")
 
@@ -66,7 +66,7 @@ def contact(request):
     return JsonResponse({"ok": True, "message": "Bedankt voor uw aanvraag. U ontvangt zo meteen een bevestiging per e-mail."})
 
 
-@require_GET
+@require_safe
 def health(request):
     try:
         with connection.cursor() as cursor:
@@ -76,4 +76,3 @@ def health(request):
         logger.exception("Database health check failed")
         return JsonResponse({"status": "unhealthy"}, status=503)
     return JsonResponse({"status": "ok"})
-

@@ -16,6 +16,11 @@ class PublicPagesTests(TestCase):
         self.assertContains(response, "Vloerisolatie")
         self.assertContains(response, "Bekerveldweg 80")
 
+    def test_home_supports_head_requests(self):
+        response = self.client.head("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"")
+
     def test_configured_availability_is_rendered(self):
         SiteConfiguration.objects.create(next_available=date(2026, 9, 14), email_reply="We bellen u snel.")
         response = self.client.get("/")
@@ -89,4 +94,3 @@ class ContactTests(TestCase):
         response = self.client.post("/contact/", self.payload)
         self.assertEqual(response.status_code, 503)
         self.assertEqual(mail.outbox, [])
-
