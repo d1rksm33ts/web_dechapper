@@ -23,10 +23,9 @@ services:
       EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
       EMAIL_HOST_PASSWORD_FILE: /run/secrets/smtp_password
       EMAIL_USE_SSL: ${EMAIL_USE_SSL:-true}
-      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-De Chapper <contact@dechapper.be>}
-      CONTACT_RECIPIENTS: ${CONTACT_RECIPIENTS:-dirk.smeets@yanoa.be}
-      CONTACT_REPLY_TO: ${CONTACT_REPLY_TO:-contact@dechapper.be}
-      CONTACT_BCC: ${CONTACT_BCC:-}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-De Chapper <info@dechapper.be>}
+      CONTACT_REPLY_TO: ${CONTACT_REPLY_TO:-info@dechapper.be}
+      CONTACT_BCC: ${CONTACT_BCC:-info@dechapper.be,info@yanoa.be}
       CONTACT_FORM_ENABLED: ${CONTACT_FORM_ENABLED:-false}
       TURNSTILE_REQUIRED: ${TURNSTILE_REQUIRED:-true}
       TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}

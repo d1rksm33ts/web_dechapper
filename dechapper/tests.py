@@ -17,8 +17,7 @@ class PublicPagesTests(TestCase):
         self.assertContains(response, "Chapewerken")
         self.assertContains(response, "Vloerisolatie")
         self.assertContains(response, "Bekerveldweg 80")
-        self.assertContains(response, "contact@dechapper.be")
-        self.assertNotContains(response, "info@dechapper.be")
+        self.assertContains(response, "info@dechapper.be")
         self.assertContains(response, "dechapper/css/legacy.")
         self.assertContains(response, '<time class="icon">', count=2)
 
@@ -131,9 +130,8 @@ class AvailabilityManagementTests(TestCase):
 
 @override_settings(
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
-    CONTACT_RECIPIENTS=["dirk.smeets@yanoa.be"],
-    CONTACT_REPLY_TO=["contact@dechapper.be"],
-    CONTACT_BCC=["office@example.test"],
+    CONTACT_REPLY_TO=["info@dechapper.be"],
+    CONTACT_BCC=["info@dechapper.be", "info@yanoa.be"],
     CONTACT_FORM_ENABLED=True,
     TURNSTILE_REQUIRED=False,
 )
@@ -155,12 +153,12 @@ class ContactTests(TestCase):
         response = self.client.post("/contact/", self.payload)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.json()["ok"])
-        self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[0].to, ["dirk.smeets@yanoa.be"])
-        self.assertEqual(mail.outbox[0].reply_to, ["klant@example.test"])
-        self.assertEqual(mail.outbox[1].to, ["klant@example.test"])
-        self.assertEqual(mail.outbox[1].reply_to, ["contact@dechapper.be"])
-        self.assertIn("We nemen snel contact op.", mail.outbox[1].body)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["klant@example.test"])
+        self.assertEqual(mail.outbox[0].bcc, ["info@dechapper.be", "info@yanoa.be"])
+        self.assertEqual(mail.outbox[0].reply_to, ["info@dechapper.be"])
+        self.assertIn("We nemen snel contact op.", mail.outbox[0].body)
+        self.assertIn("Graag ontvang ik een offerte.", mail.outbox[0].body)
 
     def test_invalid_input_returns_safe_validation_response(self):
         payload = self.payload | {"email": "invalid", "area": "-5"}

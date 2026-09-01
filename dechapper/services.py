@@ -31,27 +31,27 @@ def verify_turnstile(token, remote_ip=None):
 
 def send_contact_email(data, confirmation_text):
     details = [
+        f"Beste {data['name']},",
+        "",
+        confirmation_text,
+        "",
+        "Overzicht van uw aanvraag:",
         f"Naam: {data['name']}",
         f"E-mail: {data['email']}",
         f"Werfadres: {data['address']}",
         f"Dikte: {data.get('thickness') or '-'} cm",
         f"Oppervlakte: {data.get('area') or '-'} m²",
         f"Vloerverwarming: {data.get('floor_heating') or '-'}",
+        f"Bericht: {data['message']}",
         "",
-        data["message"],
+        "Met vriendelijke groeten,",
+        "De Chapper",
     ]
     EmailMessage(
-        subject=f"Nieuwe aanvraag via dechapper.be — {data['name']}",
+        subject=f"Vraag/prijsofferte — {data['name']}",
         body="\n".join(details),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=settings.CONTACT_RECIPIENTS,
-        reply_to=[data["email"]],
-        bcc=settings.CONTACT_BCC,
-    ).send(fail_silently=False)
-    EmailMessage(
-        subject="We hebben uw aanvraag ontvangen — De Chapper",
-        body=f"Beste {data['name']},\n\n{confirmation_text}\n\nMet vriendelijke groeten,\nDe Chapper",
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[data["email"]],
         reply_to=settings.CONTACT_REPLY_TO,
+        bcc=settings.CONTACT_BCC,
     ).send(fail_silently=False)
