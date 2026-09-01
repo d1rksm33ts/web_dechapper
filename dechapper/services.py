@@ -44,6 +44,7 @@ def send_contact_email(data, confirmation_text):
         f"Dikte: {data.get('thickness') or '-'} cm",
         f"Oppervlakte: {data.get('area') or '-'} m²",
         f"Vloerverwarming: {data.get('floor_heating') or '-'}",
+        f"BTW-tarief: {data['vat_rate']}%",
         f"Bericht: {data['message']}",
         "",
         "Met vriendelijke groeten,",

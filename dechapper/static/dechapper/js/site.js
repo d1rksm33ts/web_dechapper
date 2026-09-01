@@ -67,10 +67,13 @@ const showFieldError = (name, message) => {
   if (feedback) { feedback.textContent = message; feedback.classList.add('visible'); }
   return field;
 };
-form?.querySelectorAll('input, textarea').forEach((field) => {
-  field.addEventListener('input', () => { field.setCustomValidity(''); clearFieldError(field); });
+form?.querySelectorAll('input, textarea, select').forEach((field) => {
+  const clearError = () => { field.setCustomValidity(''); clearFieldError(field); };
+  field.addEventListener('input', clearError);
+  field.addEventListener('change', clearError);
   field.addEventListener('invalid', () => {
     let message = field.validationMessage;
+    if (field.validity.valueMissing && field.dataset.requiredMessage) message = field.dataset.requiredMessage;
     if (field.validity.rangeUnderflow && field.dataset.minMessage) message = field.dataset.minMessage;
     if (field.validity.rangeOverflow && field.dataset.maxMessage) message = field.dataset.maxMessage;
     field.setCustomValidity(message);
@@ -81,7 +84,7 @@ form?.addEventListener('submit', async (event) => {
   event.preventDefault();
   const button = form.querySelector('button[type="submit"]');
   const status = form.querySelector('[data-form-status]');
-  form.querySelectorAll('input, textarea').forEach(clearFieldError);
+  form.querySelectorAll('input, textarea, select').forEach(clearFieldError);
   button.disabled = true;
   status.textContent = 'Uw aanvraag wordt verstuurd…';
   status.className = 'form-status';

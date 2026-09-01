@@ -1190,18 +1190,18 @@ section {
   animation: animate-loading 1s linear infinite;
 }
 
-.contact .php-email-form input, .contact .php-email-form textarea {
+.contact .php-email-form input, .contact .php-email-form textarea, .contact .php-email-form select {
   border-radius: 0;
   box-shadow: none;
   font-size: 14px;
   border-radius: 4px;
 }
 
-.contact .php-email-form input:focus, .contact .php-email-form textarea:focus {
+.contact .php-email-form input:focus, .contact .php-email-form textarea:focus, .contact .php-email-form select:focus {
   border-color: #d9232d;
 }
 
-.contact .php-email-form input {
+.contact .php-email-form input, .contact .php-email-form select {
   height: 44px;
 }
 
@@ -1270,4 +1270,3 @@ section {
   font-size: 13px;
   color: #ccc;
 }
-

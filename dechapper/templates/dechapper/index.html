@@ -343,6 +343,16 @@
                 <input type="text" class="form-control" name="address" id="adres" placeholder="Werfadres" required aria-describedby="address-error"><div class="field-feedback" id="address-error" data-field-error="address"></div>
               </div>
               <div class="form-group mt-3">
+                <label class="vat-rate-label" for="btw-tarief">Toepasselijk BTW-tarief</label>
+                <select class="form-control" name="vat_rate" id="btw-tarief" required aria-describedby="vat-rate-help vat-rate-error" data-required-message="Kies het toepasselijke BTW-tarief.">
+                  <option value="" selected>Kies 6% of 21% BTW</option>
+                  <option value="6">6% BTW — woning minstens 10 jaar in gebruik</option>
+                  <option value="21">21% BTW — standaardtarief</option>
+                </select>
+                <small class="vat-rate-help" id="vat-rate-help">De keuze is indicatief. De Chapper bevestigt het toepasselijke tarief in de offerte.</small>
+                <div class="field-feedback" id="vat-rate-error" data-field-error="vat_rate"></div>
+              </div>
+              <div class="form-group mt-3">
                 <textarea class="form-control" name="message" rows="5" placeholder="Jouw Bericht" required aria-describedby="message-error"></textarea><div class="field-feedback" id="message-error" data-field-error="message"></div>
               </div>
               <div class="my-3"><p class="form-status" data-form-status aria-live="polite">{% if not contact_form_enabled %}Het online contactformulier wordt voorbereid. Mail ons voorlopig rechtstreeks.{% endif %}</p></div>

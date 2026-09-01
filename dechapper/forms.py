@@ -23,6 +23,11 @@ class AvailabilityForm(forms.ModelForm):
 
 
 class ContactForm(forms.Form):
+    VAT_RATE_CHOICES = (
+        ("6", "6% BTW — woning minstens 10 jaar in gebruik"),
+        ("21", "21% BTW — standaardtarief"),
+    )
+
     name = forms.CharField(max_length=120, label="Naam", error_messages={"required": "Vul uw naam in."})
     email = forms.EmailField(label="E-mailadres", error_messages={"required": "Vul uw e-mailadres in.", "invalid": "Vul een geldig e-mailadres in."})
     thickness = forms.DecimalField(
@@ -48,6 +53,14 @@ class ContactForm(forms.Form):
         },
     )
     floor_heating = forms.CharField(required=False, max_length=120, label="Vloerverwarming")
+    vat_rate = forms.ChoiceField(
+        choices=VAT_RATE_CHOICES,
+        label="BTW-tarief",
+        error_messages={
+            "required": "Kies het toepasselijke BTW-tarief.",
+            "invalid_choice": "Kies 6%% of 21%% BTW.",
+        },
+    )
     address = forms.CharField(max_length=240, label="Werfadres", error_messages={"required": "Vul het werfadres in."})
     message = forms.CharField(widget=forms.Textarea, max_length=4000, label="Bericht", error_messages={"required": "Beschrijf kort uw aanvraag."})
     website = forms.CharField(required=False, widget=forms.HiddenInput, label="")

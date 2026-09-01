@@ -142,6 +142,7 @@ class ContactTests(TestCase):
         "thickness": "7.5",
         "area": "120",
         "floor_heating": "Ja",
+        "vat_rate": "6",
         "address": "Teststraat 1, Zonhoven",
         "message": "Graag ontvang ik een offerte.",
         "website": "",
@@ -161,12 +162,29 @@ class ContactTests(TestCase):
         self.assertIn("We nemen snel contact op.", mail.outbox[0].body)
         self.assertIn("Overzicht van uw aanvraag:\n\nNaam: Test Klant", mail.outbox[0].body)
         self.assertIn("Graag ontvang ik een offerte.", mail.outbox[0].body)
+        self.assertIn("BTW-tarief: 6%", mail.outbox[0].body)
         self.assertEqual(len(mail.outbox[0].alternatives), 1)
         html = mail.outbox[0].alternatives[0].content
         self.assertIn("Hallo Test Klant,<br><br>", html)
         self.assertIn("We nemen snel contact op.<br><br>", html)
         self.assertIn('<table border="1">', html)
         self.assertIn("Werfadres: <b>Teststraat 1, Zonhoven</b>", html)
+        self.assertIn("BTW-tarief: <b>6%</b>", html)
+
+    def test_vat_rate_is_required(self):
+        response = self.client.post("/contact/", self.payload | {"vat_rate": ""})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"]["vat_rate"][0]["message"],
+            "Kies het toepasselijke BTW-tarief.",
+        )
+        self.assertEqual(mail.outbox, [])
+
+    def test_invalid_vat_rate_is_rejected(self):
+        response = self.client.post("/contact/", self.payload | {"vat_rate": "12"})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["errors"]["vat_rate"][0]["message"], "Kies 6% of 21% BTW.")
+        self.assertEqual(mail.outbox, [])
 
     def test_invalid_input_returns_safe_validation_response(self):
         payload = self.payload | {"email": "invalid", "area": "-5"}
