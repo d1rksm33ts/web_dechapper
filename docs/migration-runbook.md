@@ -1,6 +1,7 @@
 # Greenfield deployment and migration runbook
 
-This runbook creates an isolated preview. It does not alter current production or DNS for `dechapper.be`.
+This runbook records the isolated greenfield deployment and the production
+cutover completed on 2026-09-01.
 
 The application does not publish a host port. Shared containerized Caddy reaches
 `web-dechapper:8080` over `yanoa-edge`. The older `127.0.0.1:8003:8000` pattern
@@ -74,8 +75,40 @@ Before enabling the form:
 3. Store its secret in `turnstile_secret` and set the SMTP variables, `TURNSTILE_SITE_KEY`, `TURNSTILE_REQUIRED=true`, `TURNSTILE_EXPECTED_HOSTNAMES`, `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`, and `CONTACT_FORM_ENABLED=true` in `app.env`.
 4. Recreate the app and submit a real end-to-end test request.
 
-## 7. Cutover (later phase)
+## 7. Production cutover and legacy decommissioning
 
-Only after acceptance: reduce DNS TTL, take a final backup, update the three production hostnames in Caddy and Django settings, switch DNS, verify redirects/TLS/forms, and retain the old service for a rollback window.
+The production canonical hostname is `dechapper.be`. `www.dechapper.be`,
+`chapper.be`, and `www.chapper.be` redirect permanently to the canonical
+hostname while preserving the requested path and query string. All four DNS
+records point to `185.115.218.135`, where Caddy manages their TLS certificates.
 
-The production canonical hostname is `dechapper.be`. `www.dechapper.be`, `chapper.be`, and `www.chapper.be` redirect permanently to the canonical hostname while preserving the requested path and query string. Keep `dechapper.greenfield.yanoa.be` available during the rollback window.
+Before cutover, a final legacy SQLite snapshot was copied to:
+
+```text
+/srv/yanoa/backups/legacy/dechapper/dechapper-legacy-pre-cutover-2026-09-01.sqlite3
+```
+
+The old host used the shared `yanoa_be` uWSGI monolith, so that service cannot
+be stopped until the remaining YaNoa routes have migrated. Only the legacy
+De Chapper nginx sites were deactivated. Their symlinks remain recoverable at:
+
+```text
+/etc/nginx/decommissioned-sites/2026-09-01-dechapper/
+```
+
+The four obsolete Certbot renewal profiles were moved to:
+
+```text
+/etc/letsencrypt/renewal-decommissioned/2026-09-01-dechapper/
+```
+
+The old code, SQLite database, and certificate material have deliberately not
+been deleted. A rollback consists of restoring both nginx symlinks to
+`/etc/nginx/sites-enabled/`, running `sudo nginx -t`, reloading nginx, restoring
+the renewal profiles if needed, and changing the four DNS records back to
+`217.19.239.177`.
+
+Post-decommission verification confirmed that the other old-host applications
+remained reachable. An unrelated pre-existing issue was observed: the
+certificate currently served for `www.yanoa.be` does not include that hostname;
+the canonical `yanoa.be` endpoint remains healthy.
