@@ -15,6 +15,13 @@ class PublicPagesTests(TestCase):
         self.assertContains(response, "Chapewerken")
         self.assertContains(response, "Vloerisolatie")
         self.assertContains(response, "Bekerveldweg 80")
+        self.assertContains(response, "dechapper/css/legacy.")
+        self.assertContains(response, '<time class="icon">', count=2)
+
+    def test_navigation_preserves_original_sections(self):
+        response = self.client.get("/")
+        for target in ("#hero", "#about", "#services", "#portfolio", "#available", "#contact"):
+            self.assertContains(response, f'href="{target}"')
 
     def test_home_supports_head_requests(self):
         response = self.client.head("/")

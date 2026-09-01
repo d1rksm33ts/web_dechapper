@@ -1,0 +1,12 @@
+/* Small compatibility layer: preserves the production design without its old JS/icon bundles. */
+.mobile-nav-toggle{display:none;color:#fff;background:transparent;border:0;font-size:28px;line-height:1;padding:6px;cursor:pointer}
+.navbar>ul>li>a:before{background-color:#fff}
+.contact .info i,.icon-box .icon i,#services .icon i{font-family:inherit;font-style:normal;line-height:1}
+.bx-user-check:before{content:"✓"}.bx-trending-up:before{content:"↗"}.bx-check-square:before{content:"✓"}.bx-vertical-center:before{content:"↕"}.bx-sun:before{content:"☀"}.bx-zoom-in:before{content:"⌕"}
+.bi-geo-alt:before{content:"⌖"}.bi-envelope:before{content:"@"}.bi-phone:before{content:"☎"}
+.portfolio-lightbox{cursor:zoom-in}.form-status{margin:0;padding:10px 0;font-size:14px}.form-status.success{color:#168044}.form-status.error{color:#b42318}
+.php-email-form button:disabled{opacity:.55;cursor:not-allowed}.legacy-lightbox{border:0;padding:0;background:transparent;max-width:min(1200px,94vw);max-height:92vh}.legacy-lightbox::backdrop{background:rgba(0,0,0,.92)}.legacy-lightbox img{display:block;max-width:94vw;max-height:88vh}.legacy-lightbox button{position:fixed;top:14px;right:24px;border:0;background:transparent;color:#fff;font-size:42px;cursor:pointer}
+.back-to-top{color:#fff;font-size:23px;font-weight:700}
+@media(max-width:991px){.mobile-nav-toggle{display:block}.navbar-mobile .mobile-nav-toggle{position:absolute;top:15px;right:15px}.navbar-mobile ul{display:block}.navbar-mobile>ul{overflow-y:auto}.navbar-mobile a{color:#666}.navbar-mobile>ul>li>a:before{background-color:#364a7a}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+

@@ -1,36 +1,55 @@
 const header = document.querySelector('[data-header]');
-const navToggle = document.querySelector('[data-nav-toggle]');
 const navigation = document.querySelector('[data-navigation]');
+const navToggle = document.querySelector('[data-nav-toggle]');
+const backToTop = document.querySelector('.back-to-top');
 
-const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 30);
-updateHeader();
-window.addEventListener('scroll', updateHeader, { passive: true });
+const updateScrollState = () => {
+  const scrolled = window.scrollY > 80;
+  header?.classList.toggle('header-scrolled', scrolled);
+  backToTop?.classList.toggle('active', scrolled);
+};
+updateScrollState();
+window.addEventListener('scroll', updateScrollState, { passive: true });
 
 navToggle?.addEventListener('click', () => {
-  const open = navToggle.getAttribute('aria-expanded') === 'true';
-  navToggle.setAttribute('aria-expanded', String(!open));
-  navigation.classList.toggle('open', !open);
+  const open = navigation.classList.toggle('navbar-mobile');
+  navToggle.setAttribute('aria-expanded', String(open));
+  navToggle.lastChild.textContent = open ? '×' : '☰';
 });
 navigation?.addEventListener('click', (event) => {
-  if (event.target.matches('a')) {
-    navigation.classList.remove('open');
-    navToggle?.setAttribute('aria-expanded', 'false');
-  }
+  if (!event.target.closest('a') || !navigation.classList.contains('navbar-mobile')) return;
+  navigation.classList.remove('navbar-mobile');
+  navToggle.setAttribute('aria-expanded', 'false');
+  navToggle.lastChild.textContent = '☰';
 });
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => entry.target.classList.toggle('is-visible', entry.isIntersecting));
-}, { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+const sections = [...document.querySelectorAll('main section[id], #hero')];
+const navLinks = [...document.querySelectorAll('.navbar .scrollto')];
+const sectionObserver = new IntersectionObserver((entries) => {
+  const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  if (!visible) return;
+  navLinks.forEach((link) => link.classList.toggle('active', link.hash === `#${visible.target.id}`));
+}, { rootMargin: '-25% 0px -60%', threshold: [0, .2, .5] });
+sections.forEach((section) => sectionObserver.observe(section));
+
+document.querySelectorAll('#portfolio-flters li').forEach((filter) => filter.addEventListener('click', () => {
+  document.querySelectorAll('#portfolio-flters li').forEach((item) => item.classList.remove('filter-active'));
+  filter.classList.add('filter-active');
+  const selector = filter.dataset.filter;
+  document.querySelectorAll('.portfolio-item').forEach((item) => {
+    item.hidden = selector !== '*' && !item.matches(selector);
+  });
+}));
 
 const dialog = document.querySelector('[data-lightbox]');
 const dialogImage = dialog?.querySelector('img');
-document.querySelectorAll('[data-image]').forEach((button) => button.addEventListener('click', () => {
-  dialogImage.src = button.dataset.image;
-  dialogImage.alt = button.querySelector('img').alt;
+document.querySelectorAll('.portfolio-lightbox').forEach((link) => link.addEventListener('click', (event) => {
+  event.preventDefault();
+  dialogImage.src = link.href;
+  dialogImage.alt = link.title || 'Realisatie van De Chapper';
   dialog.showModal();
 }));
-dialog?.querySelector('[data-lightbox-close]').addEventListener('click', () => dialog.close());
+dialog?.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
 dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
 
 window.dechapperRecaptcha = (token) => {
@@ -57,4 +76,3 @@ form?.addEventListener('submit', async (event) => {
     status.classList.add('error');
   } finally { button.disabled = false; }
 });
-

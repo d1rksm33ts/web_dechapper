@@ -2,6 +2,11 @@
 
 This runbook creates an isolated preview. It does not alter current production or DNS for `dechapper.be`.
 
+The application does not publish a host port. Shared containerized Caddy reaches
+`web-dechapper:8080` over `yanoa-edge`. The older `127.0.0.1:8003:8000` pattern
+in `yanoa_home` is required by host-installed nginx; it is not needed when both
+proxy and application are containers on the greenfield network.
+
 ## 1. Preview DNS
 
 Create an `A` record:
