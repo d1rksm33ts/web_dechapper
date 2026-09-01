@@ -36,6 +36,7 @@ def send_contact_email(data, confirmation_text):
         confirmation_text,
         "",
         "Overzicht van uw aanvraag:",
+        "",
         f"Naam: {data['name']}",
         f"E-mail: {data['email']}",
         f"Werfadres: {data['address']}",

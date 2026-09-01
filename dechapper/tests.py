@@ -158,6 +158,7 @@ class ContactTests(TestCase):
         self.assertEqual(mail.outbox[0].bcc, ["info@dechapper.be", "info@yanoa.be"])
         self.assertEqual(mail.outbox[0].reply_to, ["info@dechapper.be"])
         self.assertIn("We nemen snel contact op.", mail.outbox[0].body)
+        self.assertIn("Overzicht van uw aanvraag:\n\nNaam: Test Klant", mail.outbox[0].body)
         self.assertIn("Graag ontvang ik een offerte.", mail.outbox[0].body)
 
     def test_invalid_input_returns_safe_validation_response(self):
@@ -165,6 +166,16 @@ class ContactTests(TestCase):
         response = self.client.post("/contact/", payload)
         self.assertEqual(response.status_code, 400)
         self.assertFalse(response.json()["ok"])
+        self.assertEqual(response.json()["errors"]["email"][0]["message"], "Vul een geldig e-mailadres in.")
+        self.assertEqual(response.json()["errors"]["area"][0]["message"], "De oppervlakte moet minstens 1 m² zijn.")
+        self.assertEqual(mail.outbox, [])
+
+    def test_zero_measurements_return_specific_dutch_errors(self):
+        response = self.client.post("/contact/", self.payload | {"thickness": "0", "area": "0"})
+        self.assertEqual(response.status_code, 400)
+        errors = response.json()["errors"]
+        self.assertEqual(errors["thickness"][0]["message"], "De dikte van de chape moet groter zijn dan 0 cm.")
+        self.assertEqual(errors["area"][0]["message"], "De oppervlakte moet minstens 1 m² zijn.")
         self.assertEqual(mail.outbox, [])
 
     def test_honeypot_rejects_bot(self):

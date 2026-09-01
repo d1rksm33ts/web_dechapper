@@ -53,19 +53,50 @@ dialog?.querySelector('[data-lightbox-close]')?.addEventListener('click', () => 
 dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
 
 const form = document.querySelector('[data-contact-form]');
+const clearFieldError = (field) => {
+  field?.classList.remove('is-invalid');
+  field?.removeAttribute('aria-invalid');
+  const feedback = form?.querySelector(`[data-field-error="${field?.name}"]`);
+  if (feedback) { feedback.textContent = ''; feedback.classList.remove('visible'); }
+};
+const showFieldError = (name, message) => {
+  const field = form?.elements.namedItem(name);
+  const feedback = form?.querySelector(`[data-field-error="${name}"]`);
+  field?.classList.add('is-invalid');
+  field?.setAttribute('aria-invalid', 'true');
+  if (feedback) { feedback.textContent = message; feedback.classList.add('visible'); }
+  return field;
+};
+form?.querySelectorAll('input, textarea').forEach((field) => {
+  field.addEventListener('input', () => { field.setCustomValidity(''); clearFieldError(field); });
+  field.addEventListener('invalid', () => {
+    let message = field.validationMessage;
+    if (field.validity.rangeUnderflow && field.dataset.minMessage) message = field.dataset.minMessage;
+    if (field.validity.rangeOverflow && field.dataset.maxMessage) message = field.dataset.maxMessage;
+    field.setCustomValidity(message);
+    showFieldError(field.name, message);
+  });
+});
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();
   const button = form.querySelector('button[type="submit"]');
   const status = form.querySelector('[data-form-status]');
+  form.querySelectorAll('input, textarea').forEach(clearFieldError);
   button.disabled = true;
   status.textContent = 'Uw aanvraag wordt verstuurd…';
   status.className = 'form-status';
   try {
     const response = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'X-Requested-With': 'XMLHttpRequest' } });
     const result = await response.json();
-    status.textContent = result.message;
+    let firstInvalidField = null;
+    Object.entries(result.errors || {}).forEach(([name, errors]) => {
+      const message = errors.map((error) => error.message).join(' ');
+      firstInvalidField ||= showFieldError(name, message);
+    });
+    status.textContent = firstInvalidField ? 'Controleer de gemarkeerde velden.' : result.message;
     status.classList.add(response.ok ? 'success' : 'error');
     if (response.ok) { form.reset(); if (window.turnstile) window.turnstile.reset(); }
+    else { firstInvalidField?.focus(); if (window.turnstile) window.turnstile.reset(); }
   } catch (_) {
     status.textContent = 'Er ging iets mis. Probeer later opnieuw of mail ons rechtstreeks.';
     status.classList.add('error');

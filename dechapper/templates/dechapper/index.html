@@ -322,28 +322,28 @@
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Je naam" required="">
+                  <input type="text" name="name" class="form-control" id="name" placeholder="Je naam" required aria-describedby="name-error"><div class="field-feedback" id="name-error" data-field-error="name"></div>
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Jouw Emailadres" required="">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Jouw Emailadres" required aria-describedby="email-error"><div class="field-feedback" id="email-error" data-field-error="email"></div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-4 form-group">
-                  <input type="text" name="thickness" class="form-control" id="dikte" placeholder="Dikte van de chape (cm)" min="0" max="99">
+                  <input type="number" name="thickness" class="form-control" id="dikte" placeholder="Dikte van de chape (cm)" min="0.1" max="99" step="0.1" inputmode="decimal" aria-describedby="thickness-error" data-min-message="De dikte van de chape moet groter zijn dan 0 cm." data-max-message="De dikte van de chape mag maximaal 99 cm zijn."><div class="field-feedback" id="thickness-error" data-field-error="thickness"></div>
                 </div>
                 <div class="col-md-4 form-group mt-3 mt-md-0">
-                  <input type="text" class="form-control" name="area" id="oppervlakte" placeholder="Oppervlakte (m2)">
+                  <input type="number" class="form-control" name="area" id="oppervlakte" placeholder="Oppervlakte (m²)" min="1" step="0.1" inputmode="decimal" aria-describedby="area-error" data-min-message="De oppervlakte moet minstens 1 m² zijn."><div class="field-feedback" id="area-error" data-field-error="area"></div>
                 </div>
                 <div class="col-md-4 form-group mt-3 mt-md-0">
                   <input type="text" class="form-control" name="floor_heating" id="vloer" placeholder="Is er vloerverwarming?">
                 </div>
               </div>
               <div class="form-group mt-3">
-                <input type="text" class="form-control" name="address" id="adres" placeholder="Werfadres" required="">
+                <input type="text" class="form-control" name="address" id="adres" placeholder="Werfadres" required aria-describedby="address-error"><div class="field-feedback" id="address-error" data-field-error="address"></div>
               </div>
               <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="5" placeholder="Jouw Bericht" required=""></textarea>
+                <textarea class="form-control" name="message" rows="5" placeholder="Jouw Bericht" required aria-describedby="message-error"></textarea><div class="field-feedback" id="message-error" data-field-error="message"></div>
               </div>
               <div class="my-3"><p class="form-status" data-form-status aria-live="polite">{% if not contact_form_enabled %}Het online contactformulier wordt voorbereid. Mail ons voorlopig rechtstreeks.{% endif %}</p></div>
               <div class="row">
