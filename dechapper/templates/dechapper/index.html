@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="{% static 'dechapper/vendor/bootstrap-icons/bootstrap-icons.css' %}">
   <link rel="stylesheet" href="{% static 'dechapper/css/legacy.css' %}">
   <link rel="stylesheet" href="{% static 'dechapper/css/faithful-fixes.css' %}">
+  {% if contact_form_enabled and turnstile_required %}<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>{% endif %}
 </head>
 
 <body>
@@ -347,7 +348,7 @@
               <div class="my-3"><p class="form-status" data-form-status aria-live="polite">{% if not contact_form_enabled %}Het online contactformulier wordt voorbereid. Mail ons voorlopig rechtstreeks.{% endif %}</p></div>
               <div class="row">
                 <div class="col-md-6 form-group">
-                  {% if recaptcha_required %}<div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" data-callback="dechapperRecaptcha"></div>{% endif %}<input type="hidden" name="recaptcha_token" value=""><div class="visually-hidden" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+                  {% if turnstile_required %}<div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}" data-action="contact" data-language="nl" data-size="flexible" data-response-field-name="turnstile_token"></div>{% endif %}<div class="visually-hidden" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
                 </div>
                 <div class="col-md-4 form-group">
                   <button type="submit" {% if not contact_form_enabled %}disabled{% endif %}>Stuur</button>
@@ -387,7 +388,6 @@
   <dialog class="legacy-lightbox" data-lightbox><button type="button" data-lightbox-close aria-label="Sluiten">×</button><img alt="Vergrote realisatie"></dialog>
 
   <!-- Application JavaScript -->
-  {% if recaptcha_required %}<script src="https://www.google.com/recaptcha/api.js" async defer></script>{% endif %}
   <script src="{% static 'dechapper/js/site.js' %}" defer></script>
 </body>
 

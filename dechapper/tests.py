@@ -6,6 +6,7 @@ from django.core import mail
 from django.test import TestCase, override_settings
 
 from .models import SiteConfiguration
+from .services import verify_turnstile
 
 
 class PublicPagesTests(TestCase):
@@ -42,6 +43,20 @@ class PublicPagesTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Contactformulier")
         self.assertContains(response, "niet in de databank")
+        self.assertContains(response, "Cloudflare Turnstile")
+        self.assertNotContains(response, "Google reCAPTCHA")
+
+    @override_settings(
+        CONTACT_FORM_ENABLED=True,
+        TURNSTILE_REQUIRED=True,
+        TURNSTILE_SITE_KEY="test-site-key",
+    )
+    def test_enabled_contact_form_renders_turnstile(self):
+        response = self.client.get("/")
+        self.assertContains(response, "https://challenges.cloudflare.com/turnstile/v0/api.js")
+        self.assertContains(response, 'class="cf-turnstile"')
+        self.assertContains(response, 'data-sitekey="test-site-key"')
+        self.assertContains(response, 'data-action="contact"')
 
     def test_health_checks_database(self):
         self.assertJSONEqual(self.client.get("/health/").content, {"status": "ok"})
@@ -117,7 +132,7 @@ class AvailabilityManagementTests(TestCase):
     CONTACT_RECIPIENTS=["info@dechapper.be"],
     CONTACT_BCC=["office@example.test"],
     CONTACT_FORM_ENABLED=True,
-    RECAPTCHA_REQUIRED=False,
+    TURNSTILE_REQUIRED=False,
 )
 class ContactTests(TestCase):
     payload = {
@@ -129,7 +144,7 @@ class ContactTests(TestCase):
         "address": "Teststraat 1, Zonhoven",
         "message": "Graag ontvang ik een offerte.",
         "website": "",
-        "recaptcha_token": "",
+        "turnstile_token": "",
     }
 
     def test_valid_request_sends_notification_and_confirmation(self):
@@ -155,10 +170,10 @@ class ContactTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(mail.outbox, [])
 
-    @override_settings(RECAPTCHA_REQUIRED=True, RECAPTCHA_SECRET_KEY="secret")
-    @patch("dechapper.views.verify_recaptcha", return_value=False)
-    def test_failed_recaptcha_is_rejected(self, verifier):
-        response = self.client.post("/contact/", self.payload | {"recaptcha_token": "bad"})
+    @override_settings(TURNSTILE_REQUIRED=True, TURNSTILE_SECRET_KEY="secret")
+    @patch("dechapper.views.verify_turnstile", return_value=False)
+    def test_failed_turnstile_is_rejected(self, verifier):
+        response = self.client.post("/contact/", self.payload | {"turnstile_token": "bad"})
         self.assertEqual(response.status_code, 400)
         verifier.assert_called_once()
         self.assertEqual(mail.outbox, [])
@@ -168,3 +183,35 @@ class ContactTests(TestCase):
         response = self.client.post("/contact/", self.payload)
         self.assertEqual(response.status_code, 503)
         self.assertEqual(mail.outbox, [])
+
+
+@override_settings(
+    TURNSTILE_REQUIRED=True,
+    TURNSTILE_SECRET_KEY="protected-secret",
+    TURNSTILE_EXPECTED_HOSTNAMES=["dechapper.be"],
+)
+class TurnstileTests(TestCase):
+    def test_missing_token_is_rejected_without_network_call(self):
+        with patch("dechapper.services.request.urlopen") as opener:
+            self.assertFalse(verify_turnstile(""))
+        opener.assert_not_called()
+
+    @patch("dechapper.services.json.load")
+    @patch("dechapper.services.request.urlopen")
+    def test_valid_contact_token_for_expected_hostname_is_accepted(self, opener, load):
+        load.return_value = {"success": True, "action": "contact", "hostname": "dechapper.be"}
+        self.assertTrue(verify_turnstile("valid-token"))
+        request_url = opener.call_args.args[0]
+        self.assertEqual(request_url, "https://challenges.cloudflare.com/turnstile/v0/siteverify")
+
+    @patch("dechapper.services.json.load")
+    @patch("dechapper.services.request.urlopen")
+    def test_token_for_wrong_hostname_is_rejected(self, opener, load):
+        load.return_value = {"success": True, "action": "contact", "hostname": "attacker.example"}
+        self.assertFalse(verify_turnstile("valid-token"))
+
+    @patch("dechapper.services.json.load")
+    @patch("dechapper.services.request.urlopen")
+    def test_token_for_wrong_action_is_rejected(self, opener, load):
+        load.return_value = {"success": True, "action": "login", "hostname": "dechapper.be"}
+        self.assertFalse(verify_turnstile("valid-token"))

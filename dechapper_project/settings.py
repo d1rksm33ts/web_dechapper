@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -118,11 +120,22 @@ EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", False)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "De Chapper <info@dechapper.be>")
 CONTACT_RECIPIENTS = env_list("CONTACT_RECIPIENTS", "info@dechapper.be")
 CONTACT_BCC = env_list("CONTACT_BCC")
-CONTACT_FORM_ENABLED = env_bool("CONTACT_FORM_ENABLED", True)
+CONTACT_FORM_ENABLED = env_bool("CONTACT_FORM_ENABLED", False)
 
-RECAPTCHA_REQUIRED = env_bool("RECAPTCHA_REQUIRED", False)
-RECAPTCHA_SITE_KEY = env("RECAPTCHA_SITE_KEY", "")
-RECAPTCHA_SECRET_KEY = env("RECAPTCHA_SECRET_KEY", "")
+TURNSTILE_REQUIRED = env_bool("TURNSTILE_REQUIRED", False)
+TURNSTILE_SITE_KEY = env("TURNSTILE_SITE_KEY", "")
+TURNSTILE_SECRET_KEY = env("TURNSTILE_SECRET_KEY", "")
+TURNSTILE_EXPECTED_HOSTNAMES = env_list("TURNSTILE_EXPECTED_HOSTNAMES")
+
+if CONTACT_FORM_ENABLED and not DEBUG:
+    if EMAIL_BACKEND == "django.core.mail.backends.console.EmailBackend":
+        raise ImproperlyConfigured("The production contact form requires a real email backend.")
+    if not TURNSTILE_REQUIRED:
+        raise ImproperlyConfigured("The production contact form requires Turnstile protection.")
+    if not TURNSTILE_SITE_KEY or not TURNSTILE_SECRET_KEY or not TURNSTILE_EXPECTED_HOSTNAMES:
+        raise ImproperlyConfigured("The production contact form requires complete Turnstile configuration.")
+    if TURNSTILE_SITE_KEY.startswith(("1x", "2x", "3x")) or TURNSTILE_SECRET_KEY.startswith(("1x", "2x", "3x")):
+        raise ImproperlyConfigured("Cloudflare Turnstile testing keys cannot protect a production contact form.")
 
 LOGGING = {
     "version": 1,

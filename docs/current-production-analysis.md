@@ -37,4 +37,4 @@ No credential from the legacy source has been copied. Rotate the existing SMTP a
 - database health checking and stdout logging;
 - a custom dependency-free public frontend;
 - no storage volume, because the application has no uploads or persistent files.
-
+- Cloudflare Turnstile protection with server-side token, action, and hostname validation instead of the embedded legacy reCAPTCHA credentials.

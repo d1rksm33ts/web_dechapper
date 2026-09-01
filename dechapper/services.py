@@ -8,21 +8,25 @@ from django.core.mail import EmailMessage
 logger = logging.getLogger(__name__)
 
 
-def verify_recaptcha(token, remote_ip=None):
-    if not settings.RECAPTCHA_REQUIRED:
+def verify_turnstile(token, remote_ip=None):
+    if not settings.TURNSTILE_REQUIRED:
         return True
-    if not token or not settings.RECAPTCHA_SECRET_KEY:
+    if not token or not settings.TURNSTILE_SECRET_KEY:
         return False
-    payload = {"secret": settings.RECAPTCHA_SECRET_KEY, "response": token}
+    payload = {"secret": settings.TURNSTILE_SECRET_KEY, "response": token}
     if remote_ip:
         payload["remoteip"] = remote_ip
     try:
         data = parse.urlencode(payload).encode()
-        with request.urlopen("https://www.google.com/recaptcha/api/siteverify", data=data, timeout=5) as response:
-            return bool(json.load(response).get("success"))
+        with request.urlopen("https://challenges.cloudflare.com/turnstile/v0/siteverify", data=data, timeout=5) as response:
+            result = json.load(response)
     except (OSError, ValueError):
-        logger.warning("reCAPTCHA verification failed", exc_info=True)
+        logger.warning("Turnstile verification failed", exc_info=True)
         return False
+    if not result.get("success") or result.get("action") != "contact":
+        return False
+    expected_hostnames = settings.TURNSTILE_EXPECTED_HOSTNAMES
+    return not expected_hostnames or result.get("hostname") in expected_hostnames
 
 
 def send_contact_email(data, confirmation_text):
@@ -51,4 +55,3 @@ def send_contact_email(data, confirmation_text):
         to=[data["email"]],
         reply_to=settings.CONTACT_RECIPIENTS,
     ).send(fail_silently=False)
-

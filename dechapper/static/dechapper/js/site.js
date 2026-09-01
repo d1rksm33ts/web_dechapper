@@ -52,11 +52,6 @@ document.querySelectorAll('.portfolio-lightbox').forEach((link) => link.addEvent
 dialog?.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
 dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
 
-window.dechapperRecaptcha = (token) => {
-  const input = document.querySelector('[name="recaptcha_token"]');
-  if (input) input.value = token;
-};
-
 const form = document.querySelector('[data-contact-form]');
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -70,7 +65,7 @@ form?.addEventListener('submit', async (event) => {
     const result = await response.json();
     status.textContent = result.message;
     status.classList.add(response.ok ? 'success' : 'error');
-    if (response.ok) { form.reset(); if (window.grecaptcha) window.grecaptcha.reset(); }
+    if (response.ok) { form.reset(); if (window.turnstile) window.turnstile.reset(); }
   } catch (_) {
     status.textContent = 'Er ging iets mis. Probeer later opnieuw of mail ons rechtstreeks.';
     status.classList.add('error');

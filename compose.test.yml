@@ -28,8 +28,7 @@ services:
       DB_USER: dechapper_test
       DB_PASSWORD: test-only-password
       EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
-      RECAPTCHA_REQUIRED: "false"
+      TURNSTILE_REQUIRED: "false"
       CONTACT_FORM_ENABLED: "true"
     entrypoint: []
     command: ["python", "manage.py", "test", "--verbosity=2"]
-

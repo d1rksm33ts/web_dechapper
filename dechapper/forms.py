@@ -29,7 +29,6 @@ class ContactForm(forms.Form):
     address = forms.CharField(max_length=240, label="Werfadres")
     message = forms.CharField(widget=forms.Textarea, max_length=4000, label="Bericht")
     website = forms.CharField(required=False, widget=forms.HiddenInput, label="")
-    recaptcha_token = forms.CharField(required=False, widget=forms.HiddenInput)
 
     def clean_website(self):
         if self.cleaned_data["website"]:

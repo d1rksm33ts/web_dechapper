@@ -27,14 +27,15 @@ services:
       CONTACT_RECIPIENTS: ${CONTACT_RECIPIENTS:-info@dechapper.be}
       CONTACT_BCC: ${CONTACT_BCC:-}
       CONTACT_FORM_ENABLED: ${CONTACT_FORM_ENABLED:-false}
-      RECAPTCHA_REQUIRED: ${RECAPTCHA_REQUIRED:-false}
-      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-}
-      RECAPTCHA_SECRET_KEY_FILE: /run/secrets/recaptcha_secret
+      TURNSTILE_REQUIRED: ${TURNSTILE_REQUIRED:-true}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+      TURNSTILE_SECRET_KEY_FILE: /run/secrets/turnstile_secret
+      TURNSTILE_EXPECTED_HOSTNAMES: ${TURNSTILE_EXPECTED_HOSTNAMES:-dechapper.greenfield.yanoa.be,dechapper.be,www.dechapper.be}
     secrets:
       - django_secret_key
       - db_password
       - smtp_password
-      - recaptcha_secret
+      - turnstile_secret
     networks:
       - edge
       - data
@@ -59,8 +60,8 @@ secrets:
     file: /srv/yanoa/secrets/web_dechapper/db_password
   smtp_password:
     file: /srv/yanoa/secrets/web_dechapper/smtp_password
-  recaptcha_secret:
-    file: /srv/yanoa/secrets/web_dechapper/recaptcha_secret
+  turnstile_secret:
+    file: /srv/yanoa/secrets/web_dechapper/turnstile_secret
 
 networks:
   edge:

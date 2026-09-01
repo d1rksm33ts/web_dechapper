@@ -26,6 +26,8 @@ Create the first editor account from the running application container:
 docker exec -it web-dechapper python manage.py createeditor dirk
 ```
 
+The contact form is protected by a honeypot and Cloudflare Turnstile with server-side token, action, and hostname validation. Production refuses to enable submissions unless real SMTP and Turnstile credentials are configured; Cloudflare testing keys are accepted only while the production form remains disabled.
+
 ## Verification
 
 ```sh

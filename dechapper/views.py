@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST, require_safe
 
 from .forms import AvailabilityForm, ContactForm
 from .models import SiteConfiguration
-from .services import send_contact_email, verify_recaptcha
+from .services import send_contact_email, verify_turnstile
 
 logger = logging.getLogger(__name__)
 
@@ -41,8 +41,8 @@ def home(request):
         "availability": availability(),
         "contact_form": ContactForm(),
         "contact_form_enabled": settings.CONTACT_FORM_ENABLED,
-        "recaptcha_required": settings.RECAPTCHA_REQUIRED,
-        "recaptcha_site_key": settings.RECAPTCHA_SITE_KEY,
+        "turnstile_required": settings.TURNSTILE_REQUIRED,
+        "turnstile_site_key": settings.TURNSTILE_SITE_KEY,
     })
 
 
@@ -76,7 +76,7 @@ def contact(request):
     form = ContactForm(request.POST)
     if not form.is_valid():
         return JsonResponse({"ok": False, "message": "Controleer de ingevulde gegevens.", "errors": form.errors.get_json_data()}, status=400)
-    if not verify_recaptcha(form.cleaned_data["recaptcha_token"], request.META.get("REMOTE_ADDR")):
+    if not verify_turnstile(request.POST.get("turnstile_token", ""), request.META.get("REMOTE_ADDR")):
         return JsonResponse({"ok": False, "message": "De beveiligingscontrole is niet gelukt. Probeer opnieuw."}, status=400)
     try:
         send_contact_email(form.cleaned_data, availability()["reply"])
