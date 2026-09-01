@@ -53,5 +53,5 @@ def send_contact_email(data, confirmation_text):
         body=f"Beste {data['name']},\n\n{confirmation_text}\n\nMet vriendelijke groeten,\nDe Chapper",
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[data["email"]],
-        reply_to=settings.CONTACT_RECIPIENTS,
+        reply_to=settings.CONTACT_REPLY_TO,
     ).send(fail_silently=False)

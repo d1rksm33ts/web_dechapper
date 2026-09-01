@@ -17,6 +17,8 @@ class PublicPagesTests(TestCase):
         self.assertContains(response, "Chapewerken")
         self.assertContains(response, "Vloerisolatie")
         self.assertContains(response, "Bekerveldweg 80")
+        self.assertContains(response, "contact@dechapper.be")
+        self.assertNotContains(response, "info@dechapper.be")
         self.assertContains(response, "dechapper/css/legacy.")
         self.assertContains(response, '<time class="icon">', count=2)
 
@@ -129,7 +131,8 @@ class AvailabilityManagementTests(TestCase):
 
 @override_settings(
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
-    CONTACT_RECIPIENTS=["info@dechapper.be"],
+    CONTACT_RECIPIENTS=["dirk.smeets@yanoa.be"],
+    CONTACT_REPLY_TO=["contact@dechapper.be"],
     CONTACT_BCC=["office@example.test"],
     CONTACT_FORM_ENABLED=True,
     TURNSTILE_REQUIRED=False,
@@ -153,9 +156,10 @@ class ContactTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.json()["ok"])
         self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[0].to, ["info@dechapper.be"])
+        self.assertEqual(mail.outbox[0].to, ["dirk.smeets@yanoa.be"])
         self.assertEqual(mail.outbox[0].reply_to, ["klant@example.test"])
         self.assertEqual(mail.outbox[1].to, ["klant@example.test"])
+        self.assertEqual(mail.outbox[1].reply_to, ["contact@dechapper.be"])
         self.assertIn("We nemen snel contact op.", mail.outbox[1].body)
 
     def test_invalid_input_returns_safe_validation_response(self):
