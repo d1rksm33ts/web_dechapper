@@ -29,11 +29,11 @@ class PublicPagesTests(TestCase):
         self.assertEqual(response.content, b"")
 
     def test_configured_availability_is_rendered(self):
-        SiteConfiguration.objects.create(next_available=date(2026, 9, 14), email_reply="We bellen u snel.")
+        SiteConfiguration.objects.create(next_available=date(2026, 8, 31), email_reply="We bellen u snel.")
         response = self.client.get("/")
-        self.assertContains(response, "WK 38")
-        self.assertContains(response, ">14<")
-        self.assertContains(response, "september")
+        self.assertContains(response, "WK 36")
+        self.assertContains(response, ">31<")
+        self.assertContains(response, "AUG")
 
     def test_privacy_page(self):
         response = self.client.get("/privacy/")

@@ -14,7 +14,7 @@ from .services import send_contact_email, verify_recaptcha
 
 logger = logging.getLogger(__name__)
 
-MONTHS = ("", "januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december")
+MONTHS_SHORT = ("", "JAN", "FEB", "MRT", "APR", "MEI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEC")
 
 
 def availability():
@@ -28,7 +28,7 @@ def availability():
         "date": next_date,
         "week": next_date.isocalendar().week,
         "day": next_date.day,
-        "month": MONTHS[next_date.month],
+        "month": MONTHS_SHORT[next_date.month],
         "reply": config.email_reply if config else SiteConfiguration._meta.get_field("email_reply").default,
     }
 
