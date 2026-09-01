@@ -1,5 +1,24 @@
 from django import forms
 
+from .models import SiteConfiguration
+
+
+class AvailabilityForm(forms.ModelForm):
+    class Meta:
+        model = SiteConfiguration
+        fields = ("next_available",)
+        labels = {"next_available": "Eerstvolgende beschikbare datum"}
+        widgets = {
+            "next_available": forms.DateInput(
+                attrs={"type": "date", "class": "management-date"},
+                format="%Y-%m-%d",
+            )
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["next_available"].input_formats = ["%Y-%m-%d"]
+
 
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=120, label="Naam")
@@ -16,4 +35,3 @@ class ContactForm(forms.Form):
         if self.cleaned_data["website"]:
             raise forms.ValidationError("Ongeldige aanvraag.")
         return ""
-

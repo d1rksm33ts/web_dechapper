@@ -1,0 +1,37 @@
+{% load static %}<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Login | De Chapper</title>
+  <link rel="icon" href="{% static 'dechapper/img/favicon-blue.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Poppins:400,500,700" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'dechapper/css/management.css' %}">
+</head>
+<body>
+  <main class="management-shell">
+    <section class="management-card login-card">
+      <a class="management-logo" href="{% url 'dechapper:home' %}"><img src="{% static 'dechapper/img/logo-white.png' %}" alt="De Chapper"></a>
+      <div class="management-content">
+        <p class="management-eyebrow">Beheer</p>
+        <h1>Welkom terug</h1>
+        <p>Log in om de beschikbaarheid op de website aan te passen.</p>
+        {% if form.errors %}<div class="management-alert error" role="alert">De gebruikersnaam of het wachtwoord is niet correct.</div>{% endif %}
+        <form method="post" class="management-form">{% csrf_token %}
+          <label for="id_username">Gebruikersnaam</label>
+          <input id="id_username" name="username" autocomplete="username" autofocus required>
+          <label for="id_password">Wachtwoord</label>
+          <input id="id_password" type="password" name="password" autocomplete="current-password" required>
+          {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+          <button type="submit">Inloggen</button>
+        </form>
+        <a class="management-back" href="{% url 'dechapper:home' %}">← Terug naar de website</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

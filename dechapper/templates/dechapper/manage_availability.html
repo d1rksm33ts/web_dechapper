@@ -1,0 +1,39 @@
+{% load static %}<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Beschikbaarheid beheren | De Chapper</title>
+  <link rel="icon" href="{% static 'dechapper/img/favicon-blue.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Poppins:400,500,700" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'dechapper/css/management.css' %}">
+</head>
+<body>
+  <main class="management-shell">
+    <section class="management-card editor-card">
+      <header class="management-header">
+        <a class="management-logo" href="{% url 'dechapper:home' %}"><img src="{% static 'dechapper/img/logo-white.png' %}" alt="De Chapper"></a>
+        <form method="post" action="{% url 'dechapper:logout' %}">{% csrf_token %}<button class="logout" type="submit">Uitloggen</button></form>
+      </header>
+      <div class="management-content">
+        <p class="management-eyebrow">Websitebeheer</p>
+        <h1>Beschikbaarheid</h1>
+        <p>Kies de eerstvolgende beschikbare datum. De week, dag en maand worden automatisch op de website bijgewerkt.</p>
+        {% if messages %}{% for message in messages %}<div class="management-alert success" role="status">{{ message }}</div>{% endfor %}{% endif %}
+        {{ form.non_field_errors }}
+        <form method="post" class="management-form availability-form">{% csrf_token %}
+          <label for="{{ form.next_available.id_for_label }}">{{ form.next_available.label }}</label>
+          {{ form.next_available }}
+          {% if form.next_available.errors %}<div class="field-error">{{ form.next_available.errors|striptags }}</div>{% endif %}
+          <button type="submit">Datum opslaan</button>
+        </form>
+        <a class="view-site" href="{% url 'dechapper:home' %}#available">Bekijk de datum op de website <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

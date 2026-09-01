@@ -57,7 +57,13 @@ Reload Caddy only after DNS resolves to the greenfield VM.
 
 ## 5. Configuration data
 
-Create a Django administrator and add the current next-availability date and confirmation text through `/admin/`. This is preferable to copying the shared SQLite database: the one useful record is intentionally migrated, while all unrelated monolith data stays behind.
+Create a least-privilege editor account and enter its password interactively:
+
+```sh
+docker exec -it web-dechapper python manage.py createeditor dirk
+```
+
+Use `/beheer/` to update the current next-availability date. This dedicated workflow does not require Django administrator access. Migrating only the useful configuration record keeps unrelated monolith data out of this application.
 
 ## 6. Contact form
 

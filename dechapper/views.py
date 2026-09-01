@@ -2,13 +2,15 @@ import logging
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST, require_safe
 
-from .forms import ContactForm
+from .forms import AvailabilityForm, ContactForm
 from .models import SiteConfiguration
 from .services import send_contact_email, verify_recaptcha
 
@@ -47,6 +49,24 @@ def home(request):
 @require_safe
 def privacy(request):
     return render(request, "dechapper/privacy.html")
+
+
+@login_required
+def manage_availability(request):
+    config = SiteConfiguration.objects.first()
+    if request.method == "POST":
+        form = AvailabilityForm(request.POST, instance=config)
+        if form.is_valid():
+            saved = form.save(commit=False)
+            if not saved.email_reply:
+                saved.email_reply = SiteConfiguration._meta.get_field("email_reply").default
+            saved.save()
+            messages.success(request, "De beschikbaarheidsdatum is opgeslagen.")
+            return redirect("dechapper:manage_availability")
+    else:
+        initial = None if config else {"next_available": availability()["date"]}
+        form = AvailabilityForm(instance=config, initial=initial)
+    return render(request, "dechapper/manage_availability.html", {"form": form})
 
 
 @require_POST

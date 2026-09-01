@@ -1,6 +1,7 @@
 from datetime import date
 from unittest.mock import patch
 
+from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase, override_settings
 
@@ -22,6 +23,7 @@ class PublicPagesTests(TestCase):
         response = self.client.get("/")
         for target in ("#hero", "#about", "#services", "#portfolio", "#available", "#contact"):
             self.assertContains(response, f'href="{target}"')
+        self.assertContains(response, 'href="/beheer/"')
 
     def test_home_supports_head_requests(self):
         response = self.client.head("/")
@@ -43,6 +45,71 @@ class PublicPagesTests(TestCase):
 
     def test_health_checks_database(self):
         self.assertJSONEqual(self.client.get("/health/").content, {"status": "ok"})
+
+
+class AvailabilityManagementTests(TestCase):
+    password = "a-long-test-password"
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(username="editor", password=self.password)
+        self.configuration = SiteConfiguration.objects.create(
+            next_available=date(2026, 8, 31),
+            email_reply="We bellen u snel.",
+        )
+
+    def test_management_requires_login(self):
+        response = self.client.get("/beheer/")
+        self.assertRedirects(response, "/beheer/login/?next=/beheer/")
+
+    def test_login_uses_dedicated_page_and_redirects_to_editor(self):
+        response = self.client.get("/beheer/login/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Log in om de beschikbaarheid")
+
+        response = self.client.post(
+            "/beheer/login/",
+            {"username": "editor", "password": self.password},
+        )
+        self.assertRedirects(response, "/beheer/")
+
+    def test_editor_contains_date_picker_and_public_site_link(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/beheer/")
+        self.assertContains(response, 'type="date"')
+        self.assertContains(response, 'value="2026-08-31"')
+        self.assertContains(response, 'href="/#available"')
+        self.assertContains(response, "Datum opslaan")
+
+    def test_saving_updates_database_and_public_calendar(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            "/beheer/",
+            {"next_available": "2026-10-05"},
+            follow=True,
+        )
+        self.assertContains(response, "De beschikbaarheidsdatum is opgeslagen.")
+        self.configuration.refresh_from_db()
+        self.assertEqual(self.configuration.next_available, date(2026, 10, 5))
+
+        response = self.client.get("/")
+        self.assertContains(response, "WK 41")
+        self.assertContains(response, ">5<")
+        self.assertContains(response, "OKT")
+
+    def test_invalid_date_is_not_saved(self):
+        self.client.force_login(self.user)
+        response = self.client.post("/beheer/", {"next_available": "geen-datum"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Voer een geldige datum in")
+        self.configuration.refresh_from_db()
+        self.assertEqual(self.configuration.next_available, date(2026, 8, 31))
+
+    def test_logout_is_post_only_and_closes_session(self):
+        self.client.force_login(self.user)
+        self.assertEqual(self.client.get("/beheer/logout/").status_code, 405)
+        response = self.client.post("/beheer/logout/")
+        self.assertRedirects(response, "/")
+        self.assertRedirects(self.client.get("/beheer/"), "/beheer/login/?next=/beheer/")
 
 
 @override_settings(
