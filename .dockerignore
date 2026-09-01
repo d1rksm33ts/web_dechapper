@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.venv
+__pycache__
+*.pyc
+*.sqlite3
+htmlcov
+docs
+._*
+**/._*

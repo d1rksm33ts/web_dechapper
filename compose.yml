@@ -1,0 +1,72 @@
+name: web-dechapper
+
+services:
+  web:
+    build:
+      context: .
+    image: web-dechapper:local
+    container_name: web-dechapper
+    restart: unless-stopped
+    environment:
+      DJANGO_SECRET_KEY_FILE: /run/secrets/django_secret_key
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-dechapper.greenfield.yanoa.be}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-https://dechapper.greenfield.yanoa.be}
+      DJANGO_SECURE_COOKIES: "true"
+      DB_HOST: yanoa-postgres
+      DB_PORT: "5432"
+      DB_NAME: ${DB_NAME:-dechapper}
+      DB_USER: ${DB_USER:-dechapper_app}
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-465}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD_FILE: /run/secrets/smtp_password
+      EMAIL_USE_SSL: ${EMAIL_USE_SSL:-true}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-De Chapper <info@dechapper.be>}
+      CONTACT_RECIPIENTS: ${CONTACT_RECIPIENTS:-info@dechapper.be}
+      CONTACT_BCC: ${CONTACT_BCC:-}
+      CONTACT_FORM_ENABLED: ${CONTACT_FORM_ENABLED:-false}
+      RECAPTCHA_REQUIRED: ${RECAPTCHA_REQUIRED:-false}
+      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-}
+      RECAPTCHA_SECRET_KEY_FILE: /run/secrets/recaptcha_secret
+    secrets:
+      - django_secret_key
+      - db_password
+      - smtp_password
+      - recaptcha_secret
+    networks:
+      - edge
+      - data
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+secrets:
+  django_secret_key:
+    file: /srv/yanoa/secrets/web_dechapper/django_secret_key
+  db_password:
+    file: /srv/yanoa/secrets/web_dechapper/db_password
+  smtp_password:
+    file: /srv/yanoa/secrets/web_dechapper/smtp_password
+  recaptcha_secret:
+    file: /srv/yanoa/secrets/web_dechapper/recaptcha_secret
+
+networks:
+  edge:
+    name: yanoa-edge
+    external: true
+  data:
+    name: yanoa-data
+    external: true
+

@@ -1,0 +1,35 @@
+name: web-dechapper-test
+
+services:
+  postgres:
+    image: postgres:16.15-alpine3.24
+    environment:
+      POSTGRES_DB: dechapper_test
+      POSTGRES_USER: dechapper_test
+      POSTGRES_PASSWORD: test-only-password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dechapper_test -d dechapper_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    tmpfs:
+      - /var/lib/postgresql/data
+  test:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DJANGO_SECRET_KEY: test-only-secret-key-that-is-not-used-in-production
+      DJANGO_DEBUG: "true"
+      DJANGO_SECURE_COOKIES: "false"
+      DB_HOST: postgres
+      DB_NAME: dechapper_test
+      DB_USER: dechapper_test
+      DB_PASSWORD: test-only-password
+      EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
+      RECAPTCHA_REQUIRED: "false"
+      CONTACT_FORM_ENABLED: "true"
+    entrypoint: []
+    command: ["python", "manage.py", "test", "--verbosity=2"]
+

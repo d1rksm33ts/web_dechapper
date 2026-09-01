@@ -1,0 +1,126 @@
+{% load static %}<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="De Chapper — erkend aannemer voor chapewerken en vloerisolatie in Zonhoven.">
+  <title>De Chapper | Chapewerken en vloerisolatie</title>
+  <link rel="icon" href="{% static 'dechapper/img/favicon-blue.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'dechapper/img/apple-touch-icon.png' %}">
+  <link rel="stylesheet" href="{% static 'dechapper/css/site.css' %}">
+</head>
+<body>
+  <header class="site-header" data-header>
+    <a class="brand" href="#home" aria-label="De Chapper — naar boven">
+      <img src="{% static 'dechapper/img/logo-white.png' %}" alt="De Chapper">
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navigation" data-nav-toggle>
+      <span class="sr-only">Menu openen</span><span></span><span></span><span></span>
+    </button>
+    <nav id="navigation" class="navigation" data-navigation aria-label="Hoofdnavigatie">
+      <a href="#home">Home</a><a href="#over">Over</a><a href="#aanbod">Aanbod</a>
+      <a href="#realisaties">Realisaties</a><a href="#beschikbaarheid">Beschikbaarheid</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-shade"></div>
+      <div class="hero-content reveal is-visible">
+        <p class="eyebrow">Welkom bij</p>
+        <img class="hero-logo" src="{% static 'dechapper/img/logo-white.png' %}" alt="De Chapper">
+        <h1>Erkend aannemer voor chapewerken</h1>
+        <a class="button button-outline" href="#contact">Neem contact</a>
+      </div>
+      <a class="availability-card hero-calendar" href="#beschikbaarheid" aria-label="Beschikbaar vanaf week {{ availability.week }}">
+        <strong>WK {{ availability.week }}</strong><span>{{ availability.day }}</span><em>{{ availability.month }}</em>
+      </a>
+      <a class="scroll-cue" href="#over" aria-label="Lees verder">⌄</a>
+    </section>
+
+    <section id="over" class="section about">
+      <div class="split container">
+        <div class="portrait reveal"><img src="{% static 'dechapper/img/kristof.jpg' %}" alt="Kristof Vanderheyden, zaakvoerder van De Chapper" loading="lazy"></div>
+        <div class="reveal">
+          <p class="eyebrow blue">Over De Chapper</p>
+          <h2>Kristof Vanderheyden</h2>
+          <p class="lead">Zelfwerkend zaakvoerder en erkend aannemer voor chapewerken.</p>
+          <div class="value"><span>01</span><div><h3>Vakmanschap</h3><p>Kristof staat al meer dan 15 jaar in het vak en staat garant voor kwaliteit, eerlijkheid en werk volgens de regels van de kunst.</p></div></div>
+          <div class="value"><span>02</span><div><h3>Ervaring</h3><p>Jarenlange ervaring in chapewerken en kennis van vloerisolatie maken hem de ideale partner voor uw nieuwbouw of verbouwing.</p></div></div>
+          <div class="value"><span>03</span><div><h3>Kwaliteit en tevredenheid</h3><p>Met oog voor detail legt hij een betrouwbare basis voor de volgende stappen in uw project: vloer, dak of terras.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="aanbod" class="section services">
+      <div class="container">
+        <p class="eyebrow blue reveal">Aanbod</p><h2 class="section-title reveal">Expertise van fundering tot afwerking</h2>
+        <div class="service-grid">
+          <article class="service-card reveal"><span class="service-number">01</span><h3>Chapewerken</h3><p>Professioneel uitgevoerd met een kritisch oog op kwaliteit. Met kwaliteitsproducten, lasertechniek en een geautomatiseerde chapepomp wordt de chape gelijkmatig in de juiste verhouding verdeeld.</p></article>
+          <article class="service-card reveal"><span class="service-number">02</span><h3>Vloerisolatie</h3><p>Professionele vloerisolatie voor beter thermisch comfort, een goede akoestische kwaliteit en een gunstig effect op uw energiefactuur.</p></article>
+        </div>
+        <p class="service-note reveal">Kleine en grote werken, voor particulieren en bedrijven, bij nieuwbouw en renovatie.</p>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-inner reveal"><div><p class="eyebrow">Een project in gedachten?</p><h2>Vraag vrijblijvend informatie of een prijsofferte.</h2></div><a class="button button-light" href="#contact">Stuur een bericht</a></div>
+    </section>
+
+    <section id="realisaties" class="section gallery-section">
+      <div class="container">
+        <p class="eyebrow blue reveal">Realisaties</p><h2 class="section-title reveal">Een selectie van ons werk</h2>
+        <div class="gallery">
+          {% static 'dechapper/img/realisaties/terras-1.jpg' as image_1 %}{% static 'dechapper/img/realisaties/terras-2a.jpg' as image_2 %}{% static 'dechapper/img/realisaties/terras-2b.jpg' as image_3 %}{% static 'dechapper/img/realisaties/terras-2c.jpg' as image_4 %}{% static 'dechapper/img/realisaties/zwembad-1.jpg' as image_5 %}{% static 'dechapper/img/realisaties/zwembad-2.jpg' as image_6 %}{% static 'dechapper/img/realisaties/ruimte-1.jpg' as image_7 %}{% static 'dechapper/img/realisaties/ruimte-2.jpg' as image_8 %}{% static 'dechapper/img/realisaties/platdak-1.jpg' as image_9 %}
+          <button class="gallery-item gallery-wide reveal" data-image="{{ image_1 }}" aria-label="Bekijk buitenterras"><img src="{{ image_1 }}" alt="Chapewerken voor een buitenterras" loading="lazy"><span>Buitenterras</span></button>
+          <button class="gallery-item reveal" data-image="{{ image_2 }}" aria-label="Bekijk terras"><img src="{{ image_2 }}" alt="Afgewerkte chape voor een terras" loading="lazy"><span>Terras</span></button>
+          <button class="gallery-item reveal" data-image="{{ image_5 }}" aria-label="Bekijk zwembad"><img src="{{ image_5 }}" alt="Chapewerken rond een zwembad" loading="lazy"><span>Zwembad</span></button>
+          <button class="gallery-item reveal" data-image="{{ image_3 }}" aria-label="Bekijk chapewerken"><img src="{{ image_3 }}" alt="Nauwkeurig afgewerkte chapewerken" loading="lazy"><span>Chapewerken</span></button>
+          <button class="gallery-item gallery-wide reveal" data-image="{{ image_7 }}" aria-label="Bekijk binnenruimte"><img src="{{ image_7 }}" alt="Chape in een binnenruimte" loading="lazy"><span>Binnenruimte</span></button>
+          <button class="gallery-item reveal" data-image="{{ image_4 }}" aria-label="Bekijk terrasdetail"><img src="{{ image_4 }}" alt="Detail van terraswerken" loading="lazy"><span>Terrasdetail</span></button>
+          <button class="gallery-item reveal" data-image="{{ image_6 }}" aria-label="Bekijk zwembadwerken"><img src="{{ image_6 }}" alt="Werken bij een zwembad" loading="lazy"><span>Zwembad</span></button>
+          <button class="gallery-item reveal" data-image="{{ image_8 }}" aria-label="Bekijk renovatie"><img src="{{ image_8 }}" alt="Chapewerken tijdens een renovatie" loading="lazy"><span>Renovatie</span></button>
+          <button class="gallery-item reveal" data-image="{{ image_9 }}" aria-label="Bekijk plat dak"><img src="{{ image_9 }}" alt="Chapewerken op een plat dak" loading="lazy"><span>Plat dak</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="beschikbaarheid" class="section availability-section">
+      <div class="container availability-layout reveal">
+        <div><p class="eyebrow blue">Beschikbaarheid</p><h2>Eerstvolgende beschikbare periode</h2><p>Neem tijdig contact op om uw project te bespreken. De planning kan wijzigen naargelang omvang en locatie van de werken.</p></div>
+        <div class="availability-card large"><strong>WK {{ availability.week }}</strong><span>{{ availability.day }}</span><em>{{ availability.month }}</em><small>{{ availability.date|date:'Y' }}</small></div>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact-section">
+      <div class="container contact-layout">
+        <div class="contact-copy reveal"><p class="eyebrow">Contact</p><h2>Vertel ons over uw project.</h2><p>Voor een vrijblijvende offerte of meer informatie over onze diensten kunt u ons rechtstreeks contacteren.</p>
+          <address><strong>De Chapper bvba</strong><br>Bekerveldweg 80<br>3520 Zonhoven<br>BTW BE 0837.605.688</address>
+          <a href="mailto:info@dechapper.be">info@dechapper.be</a><a href="tel:+32475397586">+32 475 39 75 86</a>
+        </div>
+        <div class="contact-panel reveal">
+          {% if contact_form_enabled %}
+          <form action="{% url 'dechapper:contact' %}" method="post" data-contact-form novalidate>{% csrf_token %}
+            <div class="form-grid"><label>Naam<input name="name" autocomplete="name" maxlength="120" required></label><label>E-mailadres<input type="email" name="email" autocomplete="email" required></label></div>
+            <div class="form-grid form-grid-three"><label>Dikte chape (cm)<input type="number" name="thickness" min="0" max="99" step="0.1"></label><label>Oppervlakte (m²)<input type="number" name="area" min="1" step="0.1"></label><label>Vloerverwarming<input name="floor_heating" maxlength="120" placeholder="Ja / nee / nog te bepalen"></label></div>
+            <label>Werfadres<input name="address" autocomplete="street-address" maxlength="240" required></label>
+            <label>Uw bericht<textarea name="message" rows="6" maxlength="4000" required></textarea></label>
+            <div class="honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+            <input type="hidden" name="recaptcha_token" value="">
+            {% if recaptcha_required %}<div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" data-callback="dechapperRecaptcha"></div>{% endif %}
+            <div class="form-action"><button class="button button-blue" type="submit">Verstuur aanvraag</button><p class="form-status" data-form-status aria-live="polite"></p></div>
+          </form>
+          {% else %}<p class="form-disabled">Het online contactformulier wordt voorbereid. Mail ons voorlopig via <a href="mailto:info@dechapper.be">info@dechapper.be</a>.</p>{% endif %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="container footer-inner"><img src="{% static 'dechapper/img/logo-white.png' %}" alt="De Chapper"><p>© {% now 'Y' %} De Chapper</p><a href="{% url 'dechapper:privacy' %}">Privacybeleid</a></div></footer>
+  <dialog class="lightbox" data-lightbox><button type="button" data-lightbox-close aria-label="Sluiten">×</button><img alt="Vergrote realisatie"></dialog>
+  {% if recaptcha_required %}<script src="https://www.google.com/recaptcha/api.js" async defer></script>{% endif %}
+  <script src="{% static 'dechapper/js/site.js' %}" defer></script>
+</body>
+</html>
+
