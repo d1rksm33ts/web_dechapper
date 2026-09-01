@@ -12,7 +12,7 @@ dechapper.greenfield.yanoa.be -> 185.115.218.135
 
 ## 2. Repository and secrets
 
-Clone this repository to `/srv/yanoa/repositories/web_dechapper`. Create `/srv/yanoa/secrets/web_dechapper` with mode `0700` and four files with mode `0600`:
+Clone this repository to `/srv/yanoa/repositories/web_dechapper`. Create `/srv/yanoa/secrets/web_dechapper` with mode `0700`. Keep `app.env` at mode `0600`. Give the four Compose secret files owner `ubuntu`, numeric group `10001` (the fixed non-root container group) and mode `0640`:
 
 - `django_secret_key`: newly generated random value;
 - `db_password`: newly generated database password;
@@ -66,4 +66,3 @@ Before enabling the form:
 ## 7. Cutover (later phase)
 
 Only after acceptance: reduce DNS TTL, take a final backup, update the three production hostnames in Caddy and Django settings, switch DNS, verify redirects/TLS/forms, and retain the old service for a rollback window.
-
