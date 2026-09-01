@@ -77,3 +77,5 @@ Before enabling the form:
 ## 7. Cutover (later phase)
 
 Only after acceptance: reduce DNS TTL, take a final backup, update the three production hostnames in Caddy and Django settings, switch DNS, verify redirects/TLS/forms, and retain the old service for a rollback window.
+
+The production canonical hostname is `dechapper.be`. `www.dechapper.be`, `chapper.be`, and `www.chapper.be` redirect permanently to the canonical hostname while preserving the requested path and query string. Keep `dechapper.greenfield.yanoa.be` available during the rollback window.

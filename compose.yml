@@ -9,8 +9,8 @@ services:
     restart: unless-stopped
     environment:
       DJANGO_SECRET_KEY_FILE: /run/secrets/django_secret_key
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-dechapper.greenfield.yanoa.be,127.0.0.1}
-      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-https://dechapper.greenfield.yanoa.be}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-dechapper.be,dechapper.greenfield.yanoa.be,127.0.0.1}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-https://dechapper.be,https://dechapper.greenfield.yanoa.be}
       DJANGO_SECURE_COOKIES: "true"
       DB_HOST: yanoa-postgres
       DB_PORT: "5432"
