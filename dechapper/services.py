@@ -3,7 +3,8 @@ import logging
 from urllib import parse, request
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +49,25 @@ def send_contact_email(data, confirmation_text):
         "Met vriendelijke groeten,",
         "De Chapper",
     ]
-    EmailMessage(
-        subject=f"Vraag/prijsofferte — {data['name']}",
+    confirmation_parts = confirmation_text.split(". ", 1)
+    confirmation_intro = confirmation_parts[0]
+    if len(confirmation_parts) > 1:
+        confirmation_intro = confirmation_intro.rstrip(".") + " ..."
+    html_context = {
+        **data,
+        "confirmation_intro": confirmation_intro,
+        "confirmation_remainder": confirmation_parts[1] if len(confirmation_parts) > 1 else "",
+        "thickness": data.get("thickness") or "",
+        "area": data.get("area") or "",
+        "floor_heating": data.get("floor_heating") or "",
+    }
+    email = EmailMultiAlternatives(
+        subject=f"Vraag/Prijsofferte - {data['name']}",
         body="\n".join(details),
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[data["email"]],
         reply_to=settings.CONTACT_REPLY_TO,
         bcc=settings.CONTACT_BCC,
-    ).send(fail_silently=False)
+    )
+    email.attach_alternative(render_to_string("dechapper/email/contact.html", html_context), "text/html")
+    email.send(fail_silently=False)

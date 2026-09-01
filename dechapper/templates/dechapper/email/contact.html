@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="nl">
+<body>
+  <font face="Monospace">Hallo {{ name }},<br><br>
+    {{ confirmation_intro }}{% if confirmation_remainder %}<br>{{ confirmation_remainder }}{% endif %}<br><br>
+    Met vriendelijke groeten,<br><br>
+    De Chapper
+    <br><br>
+    <table border="1">
+      <tr>
+        <td colspan="2">Naam: <b>{{ name }}</b></td>
+        <td>Email: <b>{{ email }}</b></td>
+      </tr>
+      <tr>
+        <td colspan="3">Werfadres: <b>{{ address }}</b></td>
+      </tr>
+      <tr>
+        <td>Dikte: <b>{{ thickness }} cm</b></td>
+        <td>Oppervlakte: <b>{{ area }} m2</b></td>
+        <td>Vloerverwarming: <b>{{ floor_heating }}</b></td>
+      </tr>
+      <tr>
+        <td colspan="3">Bericht:<br><pre>{{ message }}</pre></td>
+      </tr>
+    </table>
+  </font>
+</body>
+</html>

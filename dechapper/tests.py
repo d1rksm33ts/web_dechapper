@@ -157,9 +157,16 @@ class ContactTests(TestCase):
         self.assertEqual(mail.outbox[0].to, ["klant@example.test"])
         self.assertEqual(mail.outbox[0].bcc, ["info@dechapper.be", "info@yanoa.be"])
         self.assertEqual(mail.outbox[0].reply_to, ["info@dechapper.be"])
+        self.assertEqual(mail.outbox[0].subject, "Vraag/Prijsofferte - Test Klant")
         self.assertIn("We nemen snel contact op.", mail.outbox[0].body)
         self.assertIn("Overzicht van uw aanvraag:\n\nNaam: Test Klant", mail.outbox[0].body)
         self.assertIn("Graag ontvang ik een offerte.", mail.outbox[0].body)
+        self.assertEqual(len(mail.outbox[0].alternatives), 1)
+        html = mail.outbox[0].alternatives[0].content
+        self.assertIn("Hallo Test Klant,<br><br>", html)
+        self.assertIn("We nemen snel contact op.<br><br>", html)
+        self.assertIn('<table border="1">', html)
+        self.assertIn("Werfadres: <b>Teststraat 1, Zonhoven</b>", html)
 
     def test_invalid_input_returns_safe_validation_response(self):
         payload = self.payload | {"email": "invalid", "area": "-5"}
