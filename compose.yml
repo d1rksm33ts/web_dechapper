@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     environment:
       DJANGO_SECRET_KEY_FILE: /run/secrets/django_secret_key
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-dechapper.be,www.dechapper.be,127.0.0.1}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-dechapper.be,www.dechapper.be,web-dechapper,127.0.0.1}
       DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-https://dechapper.be,https://www.dechapper.be}
       DJANGO_SECURE_COOKIES: "true"
       DB_HOST: yanoa-postgres
