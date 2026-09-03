@@ -5,8 +5,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="De Chapper bvba — erkend aannemer voor chapewerken en vloerisolatie in Zonhoven.">
-  <title>DeChapper.be</title>
+  <title>Chapewerken &amp; vloerisolatie in Zonhoven | De Chapper</title>
+  <meta name="description" content="De Chapper is erkend aannemer voor professionele chapewerken en vloerisolatie in Zonhoven, voor nieuwbouw en renovatie.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://dechapper.be/">
+  <meta property="og:locale" content="nl_BE">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="De Chapper">
+  <meta property="og:title" content="Chapewerken &amp; vloerisolatie in Zonhoven | De Chapper">
+  <meta property="og:description" content="Erkend aannemer voor professionele chapewerken en vloerisolatie in Zonhoven, voor nieuwbouw en renovatie.">
+  <meta property="og:url" content="https://dechapper.be/">
+  <meta property="og:image" content="https://dechapper.be{% static 'dechapper/img/top.jpg' %}">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1200">
+  <meta property="og:image:alt" content="Chapewerken door De Chapper">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Chapewerken &amp; vloerisolatie in Zonhoven | De Chapper">
+  <meta name="twitter:description" content="Erkend aannemer voor professionele chapewerken en vloerisolatie in Zonhoven.">
+  <meta name="twitter:image" content="https://dechapper.be{% static 'dechapper/img/top.jpg' %}">
   <link rel="icon" href="{% static 'dechapper/img/favicon-blue.png' %}">
   <link rel="apple-touch-icon" href="{% static 'dechapper/img/apple-touch-icon.png' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +33,46 @@
   <link rel="stylesheet" href="{% static 'dechapper/vendor/bootstrap-icons/bootstrap-icons.css' %}">
   <link rel="stylesheet" href="{% static 'dechapper/css/legacy.css' %}">
   <link rel="stylesheet" href="{% static 'dechapper/css/faithful-fixes.css' %}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    "@id": "https://dechapper.be/#business",
+    "name": "De Chapper",
+    "legalName": "De Chapper bvba",
+    "url": "https://dechapper.be/",
+    "image": "https://dechapper.be{% static 'dechapper/img/top.jpg' %}",
+    "logo": "https://dechapper.be{% static 'dechapper/img/logo-white.png' %}",
+    "description": "Erkend aannemer voor chapewerken en vloerisolatie in Zonhoven, voor nieuwbouw en renovatie.",
+    "telephone": "+32475397586",
+    "email": "info@dechapper.be",
+    "vatID": "BE0837605688",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Bekerveldweg 80",
+      "postalCode": "3520",
+      "addressLocality": "Zonhoven",
+      "addressCountry": "BE"
+    },
+    "areaServed": {
+      "@type": "AdministrativeArea",
+      "name": "Limburg, België"
+    },
+    "founder": {
+      "@type": "Person",
+      "name": "Kristof Vanderheyden",
+      "jobTitle": "Zelfwerkend zaakvoerder en erkend aannemer"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Diensten",
+      "itemListElement": [
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Chapewerken"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Vloerisolatie"}}
+      ]
+    }
+  }
+  </script>
   {% if contact_form_enabled and turnstile_required %}<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>{% endif %}
 </head>
 
@@ -27,7 +83,7 @@
     <div class="container d-flex justify-content-between align-items-center">
 
       <div id="logo">
-        <a href="#hero"><img src="{% static 'dechapper/img/logo-white.png' %}" alt="" ></a>
+        <a href="#hero"><img src="{% static 'dechapper/img/logo-white.png' %}" alt="De Chapper"></a>
       </div>
 
       <nav id="navbar" class="navbar" data-navigation>
@@ -49,7 +105,7 @@
   <section id="hero">
     <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
       <h1>Welkom bij</h1>
-      <img src="{% static 'dechapper/img/logo-white.png' %}" alt="" style="max-width:300px">
+      <img src="{% static 'dechapper/img/logo-white.png' %}" alt="De Chapper" style="max-width:300px">
       <h2>Erkend aannemer voor chapewerken</h2>
       <a href="#available" class="btn-get-started">Neem Contact</a>
       <p style="color:#aaa">Eerst volgende beschikbare periode</p>
@@ -179,7 +235,7 @@
         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-1.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/terras-1.jpg' %}" class="img-fluid" alt="Chapewerken voor een buitenterras">
             <div class="portfolio-info">
               <h4>Buitenterras</h4>
               <p>Chapewerken</p>
@@ -188,7 +244,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-2a.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/terras-2a.jpg' %}" class="img-fluid" alt="Chape voor een buitenterras">
             <div class="portfolio-info">
               <h4>Buitenterras</h4>
               <p>Chapewerken</p>
@@ -197,7 +253,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-2b.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/terras-2b.jpg' %}" class="img-fluid" alt="Afgewerkte chape voor een buitenterras">
             <div class="portfolio-info">
               <h4>Buitenterras</h4>
               <p>Chapewerken</p>
@@ -206,7 +262,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-2c.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/terras-2c.jpg' %}" class="img-fluid" alt="Buitenterras met chape in schuine helling">
             <div class="portfolio-info">
               <h4>Buitenterras met schuine helling</h4>
               <p>Chapewerken</p>
@@ -215,7 +271,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/zwembad-1.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/zwembad-1.jpg' %}" class="img-fluid" alt="Chapewerken voor de bodem van een zwembad">
             <div class="portfolio-info">
               <h4>Zwembad (bodem)</h4>
               <p>Chapewerken</p>
@@ -224,7 +280,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/zwembad-2.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/zwembad-2.jpg' %}" class="img-fluid" alt="Chapewerken voor een terras aan een zwembad">
             <div class="portfolio-info">
               <h4>Terras aan zwembad</h4>
               <p>Chapewerken</p>
@@ -233,7 +289,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/ruimte-1.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/ruimte-1.jpg' %}" class="img-fluid" alt="Chapewerken in een technische ruimte">
             <div class="portfolio-info">
               <h4>Technische Ruimte</h4>
               <p>Chapewerken</p>
@@ -242,7 +298,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/ruimte-2.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/ruimte-2.jpg' %}" class="img-fluid" alt="Chapewerken in een garage">
             <div class="portfolio-info">
               <h4>Garage</h4>
               <p>Chapewerken</p>
@@ -251,7 +307,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/platdak-1.jpg' %}" class="img-fluid" alt="">
+            <img src="{% static 'dechapper/img/realisaties/platdak-1.jpg' %}" class="img-fluid" alt="Chapewerken op een plat dak">
             <div class="portfolio-info">
               <h4>Plat dak</h4>
               <p>Chapewerken</p>

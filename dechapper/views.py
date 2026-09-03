@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import connection
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST, require_safe
@@ -49,6 +49,34 @@ def home(request):
 @require_safe
 def privacy(request):
     return render(request, "dechapper/privacy.html")
+
+
+@require_safe
+def robots_txt(request):
+    content = "\n".join([
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /admin/",
+        "Disallow: /beheer/",
+        "Disallow: /health/",
+        "Sitemap: https://dechapper.be/sitemap.xml",
+        "",
+    ])
+    return HttpResponse(content, content_type="text/plain; charset=utf-8")
+
+
+@require_safe
+def sitemap_xml(request):
+    content = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dechapper.be/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
+"""
+    return HttpResponse(content, content_type="application/xml; charset=utf-8")
 
 
 @login_required

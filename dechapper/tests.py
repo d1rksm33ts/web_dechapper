@@ -1,3 +1,5 @@
+import json
+import re
 from datetime import date
 from unittest.mock import patch
 
@@ -32,6 +34,40 @@ class PublicPagesTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b"")
 
+    def test_home_exposes_search_and_social_metadata(self):
+        response = self.client.get("/")
+        self.assertContains(response, '<link rel="canonical" href="https://dechapper.be/">', html=True)
+        self.assertContains(response, 'content="index,follow,max-image-preview:large"')
+        self.assertContains(response, 'property="og:title"')
+        self.assertContains(response, 'name="twitter:card" content="summary_large_image"')
+
+        match = re.search(r'<script type="application/ld\+json">\s*(.*?)\s*</script>', response.content.decode(), re.DOTALL)
+        self.assertIsNotNone(match)
+        structured_data = json.loads(match.group(1))
+        self.assertEqual(structured_data["@type"], "HomeAndConstructionBusiness")
+        self.assertEqual(structured_data["name"], "De Chapper")
+        self.assertEqual(structured_data["address"]["addressLocality"], "Zonhoven")
+        self.assertEqual(structured_data["founder"]["name"], "Kristof Vanderheyden")
+
+    def test_robots_points_to_canonical_sitemap_and_blocks_private_routes(self):
+        response = self.client.get("/robots.txt")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response["Content-Type"].startswith("text/plain"))
+        self.assertContains(response, "Sitemap: https://dechapper.be/sitemap.xml")
+        self.assertContains(response, "Disallow: /beheer/")
+        self.assertContains(response, "Disallow: /admin/")
+
+    def test_sitemap_contains_only_indexable_canonical_homepage(self):
+        response = self.client.get("/sitemap.xml")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response["Content-Type"].startswith("application/xml"))
+        self.assertContains(response, "<loc>https://dechapper.be/</loc>", html=True)
+        self.assertNotContains(response, "/privacy/")
+        self.assertNotContains(response, "/beheer/")
+
+    def test_unknown_public_route_returns_404(self):
+        self.assertEqual(self.client.get("/bestaat-niet/").status_code, 404)
+
     def test_configured_availability_is_rendered(self):
         SiteConfiguration.objects.create(next_available=date(2026, 8, 31), email_reply="We bellen u snel.")
         response = self.client.get("/")
@@ -46,6 +82,8 @@ class PublicPagesTests(TestCase):
         self.assertContains(response, "niet in de databank")
         self.assertContains(response, "Cloudflare Turnstile")
         self.assertNotContains(response, "Google reCAPTCHA")
+        self.assertContains(response, 'content="noindex,follow"')
+        self.assertContains(response, '<link rel="canonical" href="https://dechapper.be/privacy/">', html=True)
 
     @override_settings(
         CONTACT_FORM_ENABLED=True,
