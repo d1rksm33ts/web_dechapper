@@ -3,7 +3,25 @@
 <html lang="nl">
 
 <head>
+<style>
+body{margin:0;font-family:system-ui,sans-serif}
+.site-startup{display:none}
+.site-booting .site-startup{position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#234c31;color:white;font:16px system-ui,sans-serif;text-align:center}
+.site-startup strong{font-size:26px;letter-spacing:.02em}
+</style>
+<script>
+(function(){
+ var pending=6, root=document.documentElement;
+ root.classList.add('site-booting');
+ function reveal(){root.classList.remove('site-booting');performance.mark('site-styled');}
+ window.siteStyleReady=function(){if(--pending<=0)reveal();};
+ // A failed or stalled asset must never leave visitors behind the startup screen.
+ setTimeout(reveal,3000);
+})();
+</script>
+
   <meta charset="utf-8">
+  <link rel="preload" as="image" href="{% static 'dechapper/img/top.webp' %}" fetchpriority="high">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chapewerken &amp; vloerisolatie in Zonhoven | De Chapper</title>
   <meta name="description" content="De Chapper is erkend aannemer voor professionele chapewerken en vloerisolatie in Zonhoven, voor nieuwbouw en renovatie.">
@@ -25,14 +43,18 @@
   <meta name="twitter:image" content="https://dechapper.be{% static 'dechapper/img/top.jpg' %}">
   <link rel="icon" href="{% static 'dechapper/img/favicon-blue.png' %}">
   <link rel="apple-touch-icon" href="{% static 'dechapper/img/apple-touch-icon.png' %}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'dechapper/css/bootstrap-grid.css' %}">
-  <link rel="stylesheet" href="{% static 'dechapper/vendor/boxicons/css/boxicons.min.css' %}">
-  <link rel="stylesheet" href="{% static 'dechapper/vendor/bootstrap-icons/bootstrap-icons.css' %}">
-  <link rel="stylesheet" href="{% static 'dechapper/css/legacy.css' %}">
-  <link rel="stylesheet" href="{% static 'dechapper/css/faithful-fixes.css' %}">
+  <link href="{% static 'dechapper/css/fonts.css' %}" rel="stylesheet" media="print" onload="this.media='all';window.siteStyleReady()" onerror="window.siteStyleReady()">
+<noscript><link href="{% static 'dechapper/css/fonts.css' %}" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="{% static 'dechapper/css/bootstrap-grid.css' %}" media="print" onload="this.media='all';window.siteStyleReady()" onerror="window.siteStyleReady()">
+<noscript><link rel="stylesheet" href="{% static 'dechapper/css/bootstrap-grid.css' %}"></noscript>
+  <link rel="stylesheet" href="{% static 'dechapper/vendor/boxicons/css/boxicons.min.css' %}" media="print" onload="this.media='all';window.siteStyleReady()" onerror="window.siteStyleReady()">
+<noscript><link rel="stylesheet" href="{% static 'dechapper/vendor/boxicons/css/boxicons.min.css' %}"></noscript>
+  <link rel="stylesheet" href="{% static 'dechapper/vendor/bootstrap-icons/bootstrap-icons.css' %}" media="print" onload="this.media='all';window.siteStyleReady()" onerror="window.siteStyleReady()">
+<noscript><link rel="stylesheet" href="{% static 'dechapper/vendor/bootstrap-icons/bootstrap-icons.css' %}"></noscript>
+  <link rel="stylesheet" href="{% static 'dechapper/css/legacy.css' %}" media="print" onload="this.media='all';window.siteStyleReady()" onerror="window.siteStyleReady()">
+<noscript><link rel="stylesheet" href="{% static 'dechapper/css/legacy.css' %}"></noscript>
+  <link rel="stylesheet" href="{% static 'dechapper/css/faithful-fixes.css' %}" media="print" onload="this.media='all';window.siteStyleReady()" onerror="window.siteStyleReady()">
+<noscript><link rel="stylesheet" href="{% static 'dechapper/css/faithful-fixes.css' %}"></noscript>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -77,6 +99,7 @@
 </head>
 
 <body>
+<div class="site-startup" role="status"><strong>DeChapper</strong><span>Website wordt geladen…</span></div>
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top d-flex align-items-center header-transparent" data-header>
@@ -235,7 +258,7 @@
         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-1.jpg' %}" class="img-fluid" alt="Chapewerken voor een buitenterras">
+            <img loading="lazy" decoding="async" width="640" height="480" src="{% static 'dechapper/img/realisaties/terras-1.webp' %}" class="img-fluid" alt="Chapewerken voor een buitenterras">
             <div class="portfolio-info">
               <h4>Buitenterras</h4>
               <p>Chapewerken</p>
@@ -244,7 +267,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-2a.jpg' %}" class="img-fluid" alt="Chape voor een buitenterras">
+            <img loading="lazy" decoding="async" width="640" height="480" src="{% static 'dechapper/img/realisaties/terras-2a.webp' %}" class="img-fluid" alt="Chape voor een buitenterras">
             <div class="portfolio-info">
               <h4>Buitenterras</h4>
               <p>Chapewerken</p>
@@ -253,7 +276,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-2b.jpg' %}" class="img-fluid" alt="Afgewerkte chape voor een buitenterras">
+            <img loading="lazy" decoding="async" width="640" height="480" src="{% static 'dechapper/img/realisaties/terras-2b.webp' %}" class="img-fluid" alt="Afgewerkte chape voor een buitenterras">
             <div class="portfolio-info">
               <h4>Buitenterras</h4>
               <p>Chapewerken</p>
@@ -262,7 +285,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/terras-2c.jpg' %}" class="img-fluid" alt="Buitenterras met chape in schuine helling">
+            <img loading="lazy" decoding="async" width="480" height="640" src="{% static 'dechapper/img/realisaties/terras-2c.webp' %}" class="img-fluid" alt="Buitenterras met chape in schuine helling">
             <div class="portfolio-info">
               <h4>Buitenterras met schuine helling</h4>
               <p>Chapewerken</p>
@@ -271,7 +294,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/zwembad-1.jpg' %}" class="img-fluid" alt="Chapewerken voor de bodem van een zwembad">
+            <img loading="lazy" decoding="async" width="480" height="640" src="{% static 'dechapper/img/realisaties/zwembad-1.webp' %}" class="img-fluid" alt="Chapewerken voor de bodem van een zwembad">
             <div class="portfolio-info">
               <h4>Zwembad (bodem)</h4>
               <p>Chapewerken</p>
@@ -280,7 +303,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/zwembad-2.jpg' %}" class="img-fluid" alt="Chapewerken voor een terras aan een zwembad">
+            <img loading="lazy" decoding="async" width="640" height="480" src="{% static 'dechapper/img/realisaties/zwembad-2.webp' %}" class="img-fluid" alt="Chapewerken voor een terras aan een zwembad">
             <div class="portfolio-info">
               <h4>Terras aan zwembad</h4>
               <p>Chapewerken</p>
@@ -289,7 +312,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/ruimte-1.jpg' %}" class="img-fluid" alt="Chapewerken in een technische ruimte">
+            <img loading="lazy" decoding="async" width="640" height="480" src="{% static 'dechapper/img/realisaties/ruimte-1.webp' %}" class="img-fluid" alt="Chapewerken in een technische ruimte">
             <div class="portfolio-info">
               <h4>Technische Ruimte</h4>
               <p>Chapewerken</p>
@@ -298,7 +321,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/ruimte-2.jpg' %}" class="img-fluid" alt="Chapewerken in een garage">
+            <img loading="lazy" decoding="async" width="640" height="480" src="{% static 'dechapper/img/realisaties/ruimte-2.webp' %}" class="img-fluid" alt="Chapewerken in een garage">
             <div class="portfolio-info">
               <h4>Garage</h4>
               <p>Chapewerken</p>
@@ -307,7 +330,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-chappe">
-            <img src="{% static 'dechapper/img/realisaties/platdak-1.jpg' %}" class="img-fluid" alt="Chapewerken op een plat dak">
+            <img loading="lazy" decoding="async" width="640" height="480" src="{% static 'dechapper/img/realisaties/platdak-1.webp' %}" class="img-fluid" alt="Chapewerken op een plat dak">
             <div class="portfolio-info">
               <h4>Plat dak</h4>
               <p>Chapewerken</p>
